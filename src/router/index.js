@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import SignIn from '../views/SignIn.vue'
 
 Vue.use(VueRouter)
 
@@ -9,6 +10,11 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/signin',
+    name: 'SignIn',
+    component: SignIn
   },
   {
     path: '/about',
@@ -24,6 +30,15 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const isLogged = Vue.cookie.get("Token");
+  if (!isLogged && to.path === "/"){
+    return next("/signin");
+  }
+
+  return next();
 })
 
 export default router
