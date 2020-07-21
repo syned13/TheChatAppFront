@@ -4,8 +4,8 @@
         <h2>
             The<span class="chat-logo-title">Chat</span>
         </h2>
-        <b-input class="nickname-input" placeholder="Nickname"></b-input>
-        <b-button v-on:click="enterChat" class="enter-btn" type="is-success">Enter chat</b-button>
+        <b-input v-model="nickname" class="nickname-input" placeholder="Nickname"></b-input>
+        <b-button  v-on:click="enterChat" class="enter-btn" type="is-success">Enter chat</b-button>
     </div>
     
 </div>
@@ -14,9 +14,17 @@
 
 <script>
 export default {
+    data: function(){
+        return {
+            nickname: "",
+        }
+    },
     methods: {
         enterChat: function(){
             this.$cookie.set("Token", "d", 1);
+            console.log(this.nickname);
+            this.$store.commit("setNickname", this.nickname);
+            // this.$store.dispatch('setNickname', this.nickname);
             this.$router.push("/");
         }
     }
