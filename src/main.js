@@ -10,7 +10,6 @@ Vue.config.productionTip = false
 Vue.use(Buefy);
 Vue.use(VueCookie);
 
-
 new Vue({
   router,
   store,
