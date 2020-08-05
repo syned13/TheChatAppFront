@@ -6,13 +6,14 @@
     </div>
     <hr class="line-separator">
     <div class="d-body">
-      <h1 class="title hello-title">Hello, {{nickname}}</h1>
+      <h1 class="title hello-title">Hello, {{user.nickname}}</h1>
 
       <h1 class="title is-4 online-title">Online users</h1>
 
       <div>
-        <div v-for="user in onlineUsers" v-bind:key="user.key">
-          <UserBox v-bind:user="user"></UserBox>
+        <div v-for="onlineUser in onlineUsers" v-bind:key="onlineUser.key">
+         
+          <UserBox v-if="onlineUser.id !== user.id" v-bind:user="user"></UserBox>
         </div>
       </div>
     </div>
@@ -37,14 +38,19 @@ export default {
     }
   },
   computed:{
+    user: function (){
+      return this.$store.getters.getUser;
+    },
     nickname: function(){
-      return this.$store.state.nickname;
+      return this.$store.state.user.nickname;
     },
     onlineUsers: function(){
-      return [
-        {name:"Denys"}
-      ]
+      return this.$store.state.onlineUsers;
     }
+  },
+  beforeCreate: function(){
+    this.$store.dispatch("setWs");
+    this.$store.dispatch("getOnlineUsers");
   },
   methods:{
     logOut: function(){

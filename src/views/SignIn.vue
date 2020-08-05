@@ -24,8 +24,6 @@ export default {
             this.$cookie.set("Token", "d", 1);
             console.log(this.nickname);
             this.$store.commit("setNickname", this.nickname);
-            this.$store.dispatch("setWs");
-            // this.$store.dispatch('setNickname', this.nickname);
             this.$router.push("/");
         }
     }
