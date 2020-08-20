@@ -19,7 +19,6 @@ export default {
     },
     methods: {
         sendMessage: function(){
-            console.log("sending message" + this.$store.state.currentMessage);
             // TODO: handle error
             this.$store.dispatch("sendChatMessage");
             this.message = "";

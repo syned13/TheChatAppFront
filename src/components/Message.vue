@@ -6,7 +6,7 @@
         
         <div class="name-and-message">
             <div >
-                <p class="nickname">{{sender.nickname}}</p>
+                <p class="nickname">{{message.sender.nickname}}</p>
             </div>
             <div>
                 {{message.body}}
@@ -24,25 +24,8 @@ export default {
     props: {
         message: Object,
     },
-    computed: {
-        sender: function(){
-            return this.getUserFromID();
-        }
-    },
     methods: {
-        getUserFromID: function(){
-            let user;
-            for(user of this.$store.getters.getOnlineUsers){
-                console.log(this.message.fromID);
-                console.log(this.message.fromID);
-                if(user.id === this.message.fromID){
-                    console.log(user);
-                    return user;
-                }
-            }
-
-            return undefined;
-        }
+    
     }
 }
 </script>
@@ -72,10 +55,7 @@ export default {
 }
 
 .nickname{
-    font-weight: 300;
+    font-weight: 800;
 }
 
-p{
-    font-weight: bold;
-}
 </style>

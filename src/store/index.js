@@ -50,6 +50,9 @@ export default new Vuex.Store({
         setCurrentMessage(state, payload){
             state.currentMessage = payload;
         },
+        addOnlineUser(state, payload){
+            state.onlineUsers.push(payload);
+        },
         addMessageToMainRoom(state, payload){
             state.mainRoomMessages.push(payload);
         },
@@ -74,7 +77,6 @@ export default new Vuex.Store({
                 if (msg.messageType === MessageTypeRegistration){
                     commit("setUser", {ID: msg.toID, nickname: getters.getNickname});
                     commit("setUserID", msg.toID);
-                    console.log(getters.getUser);
 
                     let nicknameMessage = {
                         fromID: getters.getUser.ID,
@@ -83,11 +85,14 @@ export default new Vuex.Store({
                         body: getters.getUser.nickname
                     }
 
-                    console.log(nicknameMessage);
+                    commit("addOnlineUser", {id: getters.getUser.ID, nickname: getters.getUser.nickname});
                     ws.send(JSON.stringify(nicknameMessage));
                 }
                 if (msg.messageType === MessageTypeMessage){
-                    commit("addMessageToMainRoom", msg);
+                    dispatch("getUserFromID", msg).then( (value) => {
+                        msg.sender = value;
+                        commit("addMessageToMainRoom", msg);
+                    });
                 }
 
                 if(msg.messageType === MessageTypeNewUser){
@@ -106,9 +111,6 @@ export default new Vuex.Store({
         async getOnlineUsers  (state)  {
             let response = await data.getOnlineUsers();
             if (response.status === 200){
-                console.log("online users response");
-                console.log(response.data);
-
                 state.commit("setOnlineUsers", response.data);
             }
         },
@@ -121,6 +123,16 @@ export default new Vuex.Store({
             }
 
             getters.getWs.send(JSON.stringify(msg));
+        },
+        getUserFromID ({getters}, payload){
+            let user;
+            for(user of getters.getOnlineUsers){
+                if(user.id === payload.fromID){
+                    return user;
+                }
+            }
+
+            return undefined;
         }
     },
     modules: {},

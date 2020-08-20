@@ -31,6 +31,9 @@ export default {
         ChatInput,
         Message,
     },
+    updated: function(){
+        console.log(this.messages);
+    },
     computed: {
         messages: function(){
             return this.$store.state.mainRoomMessages;

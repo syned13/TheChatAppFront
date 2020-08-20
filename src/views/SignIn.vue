@@ -22,7 +22,6 @@ export default {
     methods: {
         enterChat: function(){
             this.$cookie.set("Token", "d", 1);
-            console.log(this.nickname);
             this.$store.commit("setNickname", this.nickname);
             this.$router.push("/");
         }
