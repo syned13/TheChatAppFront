@@ -5,18 +5,25 @@
       <b-button v-on:click="logOut" class="logout-btn"  outlined>Logout</b-button>
     </div>
     <hr class="line-separator">
-    <div class="d-body">
-      <h1 class="title hello-title">Hello, {{user.nickname}}</h1>
+    <div class="chat-users-wrapper">
+      <div class="d-body">
+        <h1 class="title hello-title">Hello, {{user.nickname}}</h1>
 
-      <h1 class="title is-4 online-title">Online users</h1>
+        <h1 class="title is-4 online-title">Online users</h1>
 
-      <div>
-        <div v-for="onlineUser in onlineUsers" v-bind:key="onlineUser.key">
+        <div>
+          <div v-for="onlineUser in onlineUsers" v-bind:key="onlineUser.key">
          
-          <UserBox v-if="onlineUser.id !== user.id" v-bind:user="user"></UserBox>
+          <UserBox v-if="onlineUser.id !== user.id" v-bind:user="onlineUser"></UserBox>
+          </div>
         </div>
       </div>
+      <div class="chat-wrapper">
+        <ChatWrapper></ChatWrapper>
+      </div>
+      
     </div>
+    
 
     
     
@@ -26,11 +33,13 @@
 <script>
 // @ is an alias to /src
 import UserBox from "../components/UserBox"
+import ChatWrapper from "../components/ChatWrapper"
 
 export default {
   name: 'Home',
   components: {
     UserBox,
+    ChatWrapper,
   },
   data: function(){
     return {
@@ -48,13 +57,14 @@ export default {
       return this.$store.state.onlineUsers;
     }
   },
-  beforeCreate: function(){
+  created: function(){
     this.$store.dispatch("setWs");
     this.$store.dispatch("getOnlineUsers");
   },
   methods:{
     logOut: function(){
       this.$cookie.delete("Token");
+      this.$store.commit("closeWs");
       this.$router.push("/signin");
     }
   }
@@ -110,5 +120,16 @@ h2{
 
 .online-title{
   color: #FF5D5D;
+}
+
+.chat-users-wrapper{
+  display: flex;
+  flex-direction: row;
+}
+
+.chat-wrapper{
+  padding: 10px;
+  margin-top: 20px;
+  /* background-color: black; */
 }
 </style>

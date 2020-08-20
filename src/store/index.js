@@ -5,7 +5,13 @@ import { data } from './../shared/data';
 
 Vue.use(Vuex);
 
-const EventTypeRegistration = "registration";
+const MessageTypeRegistration = "registration";
+const MessageTypeMessage = "message";
+const MessageTypeNewUser = "newUser";
+const MessageTypeGoneUser = "goneUser";
+
+const MainRoomID = "mainRoom";
+const ServerRoomID = "server";
 
 export default new Vuex.Store({
     state:{
@@ -13,6 +19,9 @@ export default new Vuex.Store({
         user: {ID: "", nickname: ""},
         ws: undefined,
         onlineUsers: [],
+        currentMessage: "",
+        messages: {}, // this should be something like a map of an array of messages, mapping a userID to an array
+        mainRoomMessages: [], // meanwhile, we could use this
     },
     mutations: {
         setNickname(state, payload){
@@ -29,6 +38,23 @@ export default new Vuex.Store({
         },
         setOnlineUsers(state, payload){
             state.onlineUsers = payload;
+        },
+        removeUser(state, payload){
+            for(let i = 0; i < state.onlineUsers.length; i++){
+                if (state.onlineUsers[i].id === payload){
+                    state.onlineUsers = state.onlineUsers.splice(i,1);
+                    break;
+                }
+            }
+        },
+        setCurrentMessage(state, payload){
+            state.currentMessage = payload;
+        },
+        addMessageToMainRoom(state, payload){
+            state.mainRoomMessages.push(payload);
+        },
+        closeWs(state){
+            state.ws.close();
         }
     },
     actions: {
@@ -39,27 +65,39 @@ export default new Vuex.Store({
             getters.getWs.close();
             commit("setWs", undefined);
         },
-        setWs({commit, getters}){
+        setWs({commit, dispatch, getters}){
             let ws = new WebSocket("ws://127.0.0.1:5000/ws");
 
             ws.onmessage = function(event){
                 let msg = JSON.parse(event.data);
-                console.log(getters.getNickname);
-
-                if (msg.messageType === EventTypeRegistration){
+                
+                if (msg.messageType === MessageTypeRegistration){
                     commit("setUser", {ID: msg.toID, nickname: getters.getNickname});
                     commit("setUserID", msg.toID);
                     console.log(getters.getUser);
 
                     let nicknameMessage = {
                         fromID: getters.getUser.ID,
-                        toID: "server",
-                        messageType: EventTypeRegistration,
+                        toID: ServerRoomID,
+                        messageType: MessageTypeRegistration,
                         body: getters.getUser.nickname
                     }
 
                     console.log(nicknameMessage);
                     ws.send(JSON.stringify(nicknameMessage));
+                }
+                if (msg.messageType === MessageTypeMessage){
+                    commit("addMessageToMainRoom", msg);
+                }
+
+                if(msg.messageType === MessageTypeNewUser){
+                    dispatch("getOnlineUsers");
+                }
+
+                // TODO: handle missing id
+                if (msg.messageType === MessageTypeGoneUser){
+                    commit("removeUser", msg.body);
+                    dispatch("getOnlineUsers");
                 }
             }
 
@@ -68,8 +106,21 @@ export default new Vuex.Store({
         async getOnlineUsers  (state)  {
             let response = await data.getOnlineUsers();
             if (response.status === 200){
+                console.log("online users response");
+                console.log(response.data);
+
                 state.commit("setOnlineUsers", response.data);
             }
+        },
+        async sendChatMessage ({getters}){
+            let msg = {
+                fromID: getters.getUser.ID,
+                toID: MainRoomID,
+                messageType: MessageTypeMessage,
+                body: getters.getCurrentMessage
+            }
+
+            getters.getWs.send(JSON.stringify(msg));
         }
     },
     modules: {},
@@ -85,6 +136,9 @@ export default new Vuex.Store({
         },
         getWs(state){
             return state.ws;
+        },
+        getCurrentMessage(state){
+            return state.currentMessage;
         }
     }
 })

@@ -4,7 +4,7 @@
 
         </div>
     <h4 class="subtitle is-4 user-name">
-        {{hello}}
+        {{user.nickname}}
     </h4>
         
     </div>
