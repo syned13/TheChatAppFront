@@ -18,6 +18,35 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  /* color: #2c3e50; */
 }
 </style>
+
+<script>
+export default {
+  computed: {
+    errorMessage: function(){
+      return this.$store.state.errorMessage;
+    }
+  },
+  methods: {
+    clearErrorMessage: function(){
+      this.$store.commit("setErrorMessage", "");
+    }
+  },
+  watch: {
+    errorMessage: function(val){
+      if(val !== ""){
+        this.$buefy.dialog.alert({
+                    title: 'Error',
+                    message: 'Ha ocurrido un error. Vuelva a intentarlo más tarde',
+                    type: 'is-danger',
+                    ariaRole: 'alertdialog',
+                    ariaModal: true,
+                    onCancel: this.clearErrorMessage()
+                })
+      }
+    }
+  }
+}
+</script>

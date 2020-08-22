@@ -15,6 +15,7 @@
           <div v-for="onlineUser in onlineUsers" v-bind:key="onlineUser.key">
          
           <UserBox v-if="onlineUser.id !== user.id" v-bind:user="onlineUser"></UserBox>
+          <div class="sized-box"></div>
           </div>
         </div>
       </div>
@@ -81,6 +82,7 @@ export default {
 .home{
   padding: 20px;
   background-color: #9AC7FE;
+  min-height: 100vh;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -130,6 +132,62 @@ h2{
 .chat-wrapper{
   padding: 10px;
   margin-top: 20px;
+  /* max-height: 100vh; */
   /* background-color: black; */
 }
+
+.sized-box{
+  height: 10px;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .hello-title{
+    display: none;
+  }
+  .chat-users-wrapper{
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
+  .home{
+    height: 100%;
+  }
+
+  .chat-wrapper{
+
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 400px) {
+    .wrapper{
+        width: 350px;
+    }
+
+    .home{
+    height: 100%;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+}
+
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 900px) {
+    .wrapper{
+        width: 800px;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1500px) {
+    .wrapper{
+        width: 1300px;
+    }
+}
+
 </style>

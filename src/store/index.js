@@ -9,6 +9,7 @@ const MessageTypeRegistration = "registration";
 const MessageTypeMessage = "message";
 const MessageTypeNewUser = "newUser";
 const MessageTypeGoneUser = "goneUser";
+const MessageTypeError = "error";
 
 const MainRoomID = "mainRoom";
 const ServerRoomID = "server";
@@ -22,6 +23,7 @@ export default new Vuex.Store({
         currentMessage: "",
         messages: {}, // this should be something like a map of an array of messages, mapping a userID to an array
         mainRoomMessages: [], // meanwhile, we could use this
+        errorMessage: ""
     },
     mutations: {
         setNickname(state, payload){
@@ -46,6 +48,9 @@ export default new Vuex.Store({
                     break;
                 }
             }
+        },
+        setErrorMessage(state, payload){
+            state.errorMessage = payload;
         },
         setCurrentMessage(state, payload){
             state.currentMessage = payload;
@@ -103,6 +108,10 @@ export default new Vuex.Store({
                 if (msg.messageType === MessageTypeGoneUser){
                     commit("removeUser", msg.body);
                     dispatch("getOnlineUsers");
+                }
+
+                if (msg.messageType === MessageTypeError){
+                    commit("setErrorMessage", msg.body)
                 }
             }
 

@@ -32,7 +32,9 @@ export default {
         Message,
     },
     updated: function(){
-        console.log(this.messages);
+        var container = this.$el.querySelector(".messages-wrapper");
+        container.scr
+        container.scrollTop = container.scrollHeight - container.clientHeight + container.scrollTop;
     },
     computed: {
         messages: function(){
@@ -49,11 +51,7 @@ export default {
     background-color: white;
     padding: 10px;
     border-radius: 20px;
-    width: 1500px;
-}
-
-.room-top-bar{
-    /* background-color: grey; */
+    /* width: 1000px; */
 }
 
 .pic-and-title{
@@ -84,20 +82,51 @@ export default {
 .input-wrapper{
     padding: 10px;
     /* background-color: grey; */
-    /* width: 100px; */
+    /* width: 70%; */
 }
 
 .messages-wrapper{
-    /* background-color: rgb(84, 216, 84); */
-    height: 500px;
+    height: 400px;
     border-radius: 10px;
     border: solid;
     border-width: 1px;
     border-color: grey;
-    padding: 30px;
+    padding: 30px 0 10px 10px;
+    overflow-y: scroll;
 }
 
 .sized-box{
     margin-top: 15px;
 }
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .wrapper{
+        width: 350px;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 400px) {
+    .wrapper{
+        width: 350px;
+    }
+}
+
+
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 900px) {
+    .wrapper{
+        width: 1000px;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1500px) {
+    .wrapper{
+        width: 1300px;
+    }
+}
+
 </style>
