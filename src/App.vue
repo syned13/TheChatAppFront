@@ -39,7 +39,7 @@ export default {
       if(val !== ""){
         this.$buefy.dialog.alert({
                     title: 'Error',
-                    message: 'Ha ocurrido un error. Vuelva a intentarlo más tarde',
+                    message: val,
                     type: 'is-danger',
                     ariaRole: 'alertdialog',
                     ariaModal: true,

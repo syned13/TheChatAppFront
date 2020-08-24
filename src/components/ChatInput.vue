@@ -18,11 +18,12 @@ export default {
         }
     },
     methods: {
-        sendMessage: function(){
+        sendMessage: async function(){
             if (this.message !== ""){
-            // TODO: handle error
-            this.$store.dispatch("sendChatMessage");
-            this.message = "";
+                // TODO: handle error
+                let result = await this.$store.dispatch("sendChatMessage");
+                console.log(result);
+                this.message = "";
             }
             
         },

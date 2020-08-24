@@ -14,9 +14,13 @@ const MessageTypeError = "error";
 const MainRoomID = "mainRoom";
 const ServerRoomID = "server";
 
+// const webSocketURL = "ws://127.0.0.1:5000/ws";
+const webSocketURL = "wss://the-chat-app-api.herokuapp.com/ws";
+
 export default new Vuex.Store({
     state:{
         nickname: "",
+        gender: "",
         user: {ID: "", nickname: ""},
         ws: undefined,
         onlineUsers: [],
@@ -28,6 +32,9 @@ export default new Vuex.Store({
     mutations: {
         setNickname(state, payload){
             state.user.nickname = payload;
+        },
+        setGender(state, payload){
+            this.state.gender = payload;
         },
         setUserID(state, payload){
             state.user.ID = payload;
@@ -74,7 +81,7 @@ export default new Vuex.Store({
             commit("setWs", undefined);
         },
         setWs({commit, dispatch, getters}){
-            let ws = new WebSocket("ws://127.0.0.1:5000/ws");
+            let ws = new WebSocket(webSocketURL);
 
             ws.onmessage = function(event){
                 let msg = JSON.parse(event.data);
@@ -93,9 +100,11 @@ export default new Vuex.Store({
                     commit("addOnlineUser", {id: getters.getUser.ID, nickname: getters.getUser.nickname});
                     ws.send(JSON.stringify(nicknameMessage));
                 }
+
                 if (msg.messageType === MessageTypeMessage){
                     dispatch("getUserFromID", msg).then( (value) => {
                         msg.sender = value;
+                        msg.receivedTime = new Date();
                         commit("addMessageToMainRoom", msg);
                     });
                 }
@@ -104,7 +113,6 @@ export default new Vuex.Store({
                     dispatch("getOnlineUsers");
                 }
 
-                // TODO: handle missing id
                 if (msg.messageType === MessageTypeGoneUser){
                     commit("removeUser", msg.body);
                     dispatch("getOnlineUsers");
@@ -113,6 +121,10 @@ export default new Vuex.Store({
                 if (msg.messageType === MessageTypeError){
                     commit("setErrorMessage", msg.body)
                 }
+            }
+
+            ws.onclose = function(){
+                commit("setErrorMessage", "Ha ocurrido un error y ha sido desconectado");
             }
 
             commit("setWs", ws);

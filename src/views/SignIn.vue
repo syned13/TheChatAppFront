@@ -17,12 +17,14 @@ export default {
     data: function(){
         return {
             nickname: "",
+            gender: "",
         }
     },
     methods: {
         enterChat: function(){
             this.$cookie.set("Token", "d", 1);
             this.$store.commit("setNickname", this.nickname);
+            this.$store.commit("setGender", this.gender);
             this.$router.push("/");
         }
     }

@@ -1,15 +1,18 @@
 <template>
     <div class="message-wrapper">
         <div class="avatar-wrapper">
-            <img class="message-pic" src="../assets/male.png" alt="pic">
+            <img class="message-pic" src="../assets/avatar.png" alt="pic">
         </div>
         
         <div class="name-and-message">
             <div >
                 <p class="nickname">{{message.sender.nickname}}</p>
             </div>
-            <div>
-                {{message.body}}
+            <div class="message-and-time">
+                <p>{{message.body}}</p>
+                <div class="msg-time">
+                    {{message.receivedTime.getHours()}}:{{message.receivedTime.getMinutes()}}
+                </div>
             </div>
            
             
@@ -37,7 +40,7 @@ export default {
 }
 
 .avatar-wrapper{
-    background-color: hotpink;
+    background-color: rgb(47, 112, 58);
     padding: 10px;
     border-radius: 360px;
     height: 60px;
@@ -58,4 +61,15 @@ export default {
     font-weight: 800;
 }
 
+.message-and-time{
+    display: flex;
+    align-items: center;
+    /* background-color: red; */
+}
+
+.msg-time{
+    margin-left: 5px;
+    font-size: 13px;
+    color: grey;
+}
 </style>
