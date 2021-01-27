@@ -1,5 +1,6 @@
 # the-chat-app
 
+Chat WebApp using web sockets.
 ## Project setup
 ```
 npm install
